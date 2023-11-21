@@ -14,58 +14,177 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ShowdownService {
-
+    //Nickname|species|uuid|currentHealth|Showdownstatus|Pokemoncondition|heldItem|ability|moves|moveInfo(pp/maxPP)|nature|evs|gender|ivs|shiny|level|happiness,pokeball,hiddenpowertype,gigantmax,dynamaxlevel,teratype
     public static void main(String[] args) {
-        UUID uuid = UUID.randomUUID();
+
+        // simulating two battles simulatneously
+
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
         Implementation implementation = new Implementation();
         implementation.openConnection();
-   /*     String[] string = new String[5];
-        string[0] = ">start {\"formatid\":\"gen7randombattle\"}";
-        String msg12 = "|player|p1|Anonycat|60|1200\n" +
-                "|player|p2|Anonybird|113|1300\n" +
-                "|teamsize|p1|4\n" +
-                "|teamsize|p2|5\n" +
-                "|gametype|doubles\n" +
-                "|gen|7\n" +
-                "|tier|[Gen 7] Doubles Ubers\n" +
-                "|rule|Species Clause: Limit one of each Pokémon\n" +
-                "|rule|OHKO Clause: OHKO moves are banned\n" +
-                "|rule|Moody Clause: Moody is banned\n" +
-                "|rule|Evasion Abilities Clause: Evasion abilities are banned\n" +
-                "|rule|Evasion Moves Clause: Evasion moves are banned\n" +
-                "|rule|Endless Battle Clause: Forcing endless battles is banned\n" +
-                "|rule|HP Percentage Mod: HP is shown in percentages\n" +
-                "|clearpoke\n" +
-                "|poke|p1|Pikachu, L59, F|item\n" +
-                "|poke|p1|Kecleon, M|item\n" +
-                "|poke|p1|Jynx, F|item\n" +
-                "|poke|p1|Mewtwo|item\n" +
-                "|poke|p2|Hoopa-Unbound|\n" +
-                "|poke|p2|Smeargle, L1, F|item\n" +
-                "|poke|p2|Forretress, L31, F|\n" +
-                "|poke|p2|Groudon, L60|item\n" +
-                "|poke|p2|Feebas, L1, M|\n" +
-                "|teampreview\n" +
-                "|\n" +
-                "|start";*/
-        String msg[] = new String[3];
-        msg[0] = ">start { \"format\": {  \"gameType\": \"singles\",    \"gen\": 9} }";
-        msg[1] = ">player p1 {\"name\":\"Alice\",\"team\":\"Articuno||||||leftovers|pressure|icebeam,hurricane,substitute,roost|Modest|252,,,252,4,||,,,30,30,||||\"}";
-        msg[2] = ">player p2 {\"name\":\"Bob\",\"team\":\"Ludicolo|||||||lifeorb|swiftswim|surf,gigadrain,icebeam,raindance|Modest|4,,,252,,252|||||\"}";
 
-      implementation.startBattle(uuid, msg);
+        BattleRegistry br1 = new BattleRegistry();
+        BattleRegistry br2 = new BattleRegistry();
 
-      String battle[] = new String[1];
-        battle[0] = ">p1 move 3 +1";
+        Pokemon pokemon1 = new Pokemon("5", "articuno", "articunoUUID1", "Articuno", "Articuno", "M", "", new EVS(), "modest", new IVS(), new String[]{"icebeam", "hurricane", "substitute", "roost"}, "pressure");
 
-        implementation.sendToShowdown(uuid,battle);
+        Pokemon pokemon2 = new Pokemon("5", "charmander", "charmanderUUID2", "charmander", "charmander", "M", "", new EVS(), "bashful", new IVS(), new String[]{"smokescreen", "ember", "scratch", "growl"}, "blaze");
+
+        Pokemon pokemon3 = new Pokemon("5", "ponyta", "ponytaUUID3", "ponyta", "ponyta", "F", "", new EVS(), "rash", new IVS(), new String[]{"flamecharge", "ember", "tailwhip", "tackle"}, "flashfire");
+
+        Pokemon pokemon4 = new Pokemon("5", "ludicolo", "ludicoloUUID4", "ludicolo", "ludicolo", "M", "", new EVS(), "modest", new IVS(), new String[]{"surf", "gigadrain", "icebeam", "raindance"}, "swiftswim");
+
+        ArrayList player1Team = new ArrayList();
+        player1Team.add(pokemon1);
+
+        ArrayList player2Team = new ArrayList();
+        player2Team.add(pokemon2);
+
+        ArrayList player3Team = new ArrayList();
+        player3Team.add(pokemon3);
+
+        ArrayList player4Team = new ArrayList();
+        player4Team.add(pokemon4);
+
+        String firstBattle[] = new String[3];
+        firstBattle[0] = ">start { \"format\": {  \"gameType\": \"singles\",    \"gen\": 9} }";
+        firstBattle[1] = ">player p1 {\"name\":\"Alice\",\"team\":\"" + br1.packTeam(player1Team) + "\"}";
+        firstBattle[2] = ">player p2 {\"name\":\"Bob\",\"team\":\"" + br1.packTeam(player2Team) + "\"}";
+
+        String secondBattle[] = new String[3];
+        secondBattle[0] = ">start { \"format\": {  \"gameType\": \"singles\", \"gen\": 9} }";
+        secondBattle[1] = ">player p1 {\"name\":\"Cassie\",\"team\":\"" + br2.packTeam(player3Team) + "\"}";
+        secondBattle[2] = ">player p2 {\"name\":\"Dave\",\"team\":\"" + br2.packTeam(player4Team) + "\"}";
+
+        implementation.startBattle(uuid1, firstBattle);
+        implementation.startBattle(uuid2, secondBattle);
+
+        String battle[] = new String[1];
+
+        System.out.println("-------Turn 1 --------");
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 2";
+        implementation.send(uuid1, battle);
+
+        // Second battle
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+        System.out.println("------- Turn 2 --------");
+
+        battle[0] = ">p1 move 4";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 4";
+        implementation.send(uuid1, battle);
+
+        // Second battle
 
 
-//oldImplementation();
+        System.out.println("------- Turn 3 --------");
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+        // Second battle
+
+
+        System.out.println("------- Turn 4 --------");
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 1";
+        implementation.send(uuid1, battle);
+
+        // Second battle
+
+
+        System.out.println("------- Turn 5 --------");
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 2";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+
+        // Second battle
+
+
+        System.out.println("------- Turn 6 --------");
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 2";
+        implementation.send(uuid1, battle);
+
+        // Second battle
+
+
+        System.out.println("------- Turn 7 --------");
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid1, battle);
+
+        battle[0] = ">p2 move 2";
+        implementation.send(uuid1, battle);
+
+        // Second battle
+
+        battle[0] = ">p1 move 2";
+        implementation.send(uuid2, battle);
+
+        battle[0] = ">p2 move 3";
+        implementation.send(uuid2, battle);
+
+
     }
 
-    public static void oldImplementation()
-    {
+    public static void oldImplementation() {
         Implementation implementation = new Implementation();
         implementation.openConnection();
         UUID uuid = UUID.randomUUID();
@@ -75,7 +194,7 @@ public class ShowdownService {
         string[2] = ">player p2 {\"name\":\"122418f8-a2ab-4047-a335-d7d7b40cd1b4\",\"team\":\"ponyta||122418f8-a2ab-4047-a335-d7d7b40cd1b4|48||-1||flashfire|flamecharge,ember,tailwhip,tackle|20/20,25/25,30/30,35/35|rash|0,0,0,0,0,0|M|12,27,8,14,15,17||18|50,pokeball,,,0,fire,\"}";
         string[3] = ">p1 team 1";
         string[4] = ">p2 team 1";
-        // implementation.startBattle(uuid,string);
+        implementation.startBattle(uuid, string);
 
         System.out.println("/n/n/n------------------------------------------------/n/n/n/n");
 

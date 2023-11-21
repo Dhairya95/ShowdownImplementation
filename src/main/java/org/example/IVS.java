@@ -7,4 +7,9 @@ public class IVS {
     int spa;
     int spd;
     int spe;
+
+    public String getShowdownIvs()
+    {
+        return "0,0,0,30,30,0";
+    }
 }

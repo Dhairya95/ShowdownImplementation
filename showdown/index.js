@@ -16,6 +16,8 @@ const CobblemonCache = require("./sim/cobblemon-cache");
 const BagItems = require("./sim/bag-items");
 
 function startBattle(graalShowdown, battleId, requestMessages) {
+
+
 console.log("Called Start Battle Method");
 	const battleStream = new BS.BattleStream();
 	console.log("No error at BattleStream");
