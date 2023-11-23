@@ -163,12 +163,108 @@ class Implementation{
         }*/
 
    fun sendToShowdown(battleId: UUID, messages: Array<String>) {
-        sendBattleMessageFunction.execute(battleId.toString(), messages)
+        sendBattleMessageFunction.execute(this,battleId.toString(), messages)
     }
+
+  /*  fun interpretMessage(battleId: UUID, message: String) {
+        // Check key map and use function if matching
+        if (message.startsWith("{\"winner\":\"")) {
+            // The post-win message is something we don't care about just yet. It's basically a summary of what happened in the battle.
+            // Check /docs/example-post-win-message.json for its format.
+            return
+        }
+
+        val battle = BattleRegistry.getBattle(battleId)
+
+        if (battle == null) {
+            LOGGER.info("No battle could be found with the id: $battleId")
+            return
+        }
+
+        runOnServer {
+            battle.showdownMessages.add(message)
+            interpret(battle, message)
+        }
+    }
+
+    fun interpret(battle: PokemonBattle, rawMessage: String) {
+        battle.log()
+        battle.log(rawMessage)
+        battle.log()
+        try {
+            val lines = rawMessage.split("\n").toMutableList()
+            if (lines[0] == "update") {
+                lines.removeAt(0)
+                while (lines.isNotEmpty()) {
+                    val line = lines.removeAt(0)
+
+                    // Split blocks have a public and private message below
+                    if (line.startsWith("|split|")) {
+                        val showdownId = line.split("|split|")[1]
+                        val targetActor = battle.getActor(showdownId)
+
+                        if (targetActor == null) {
+                            battle.log("No actor could be found with the showdown id: $showdownId")
+                            return
+                        }
+
+                        val privateMessage = lines[0]
+                        val publicMessage = lines[1]
+
+                        for (instruction in splitUpdateInstructions.entries) {
+                            if (lines[0].startsWith(instruction.key)) {
+                                instruction.value(battle, targetActor, BattleMessage(publicMessage), BattleMessage(privateMessage))
+                                break
+                            }
+                        }
+
+                        lines.removeFirst()
+                        lines.removeFirst()
+                    } else {
+                        if (line != "|") {
+                            val instruction = updateInstructions.entries.find { line.startsWith(it.key) }?.value
+                            if (instruction != null) {
+                                instruction(battle, BattleMessage(line), lines)
+                            } else {
+                                battle.dispatch {
+                                    battle.broadcastChatMessage(line.text())
+                                    GO
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (lines[0] == "sideupdate") {
+                val showdownId = lines[1]
+                val targetActor = battle.getActor(showdownId)
+                val line = lines[2]
+
+                if (targetActor == null) {
+                    battle.log("No actor could be found with the showdown id: $showdownId")
+                    return
+                }
+
+                for (instruction in sideUpdateInstructions.entries) {
+                    if (line.startsWith(instruction.key)) {
+                        instruction.value(battle, targetActor, BattleMessage(line))
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println(e);
+        }
+    }*/
+
 
     @Export
     fun sendFromShowdown(battleId: String, message: String) {
-        println(message);
+        println("IMPLEMENTATION MESSAGE :"+message);
+        println("IMPLEMENTATION MESSAGE ENDED");
+      ShowdownService.updatePokemonHealth(battleId,message);
+        ShowdownService.updatePokemonPP(battleId,message);
+
+
+
     }
 
   /*  @Export

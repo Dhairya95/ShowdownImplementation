@@ -10,6 +10,6 @@ public class IVS {
 
     public String getShowdownIvs()
     {
-        return "0,0,0,30,30,0";
+        return ",,,30,30,";
     }
 }

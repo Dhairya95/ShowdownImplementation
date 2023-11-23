@@ -17,7 +17,7 @@ public class BattleRegistry {
             // REQUIRES OUR SHOWDOWN
             packedTeamBuilder.append(pk.getUuid()).append("|");
             packedTeamBuilder.append(pk.getCurrentHealth()).append("|");
-            String showdownStatus = "";
+            String showdownStatus = pk.getStatus();
             packedTeamBuilder.append(showdownStatus).append("|");
             // If a temporary status is on the Pokémon, provide a duration.
             packedTeamBuilder.append("-1|");
@@ -28,11 +28,11 @@ public class BattleRegistry {
             packedTeamBuilder.append(pk.getAbility().replace("_", "")).append("|");
             // Moves
             packedTeamBuilder.append(
-                    Arrays.stream(pk.moves).map(move -> move.replace("_", "")).collect(Collectors.joining(","))
+                    Arrays.stream(pk.moves).map(move -> move.getName().replaceAll("_", "")).collect(Collectors.joining(","))
             ).append("|");
             // Additional move info
             packedTeamBuilder.append(
-                    Arrays.stream(pk.moves).map(move -> "10/10").collect(Collectors.joining(","))
+                    Arrays.stream(pk.moves).map(move -> move.getPp()+"/"+ move.getMaxPP()).collect(Collectors.joining(","))
             ).append("|");
             // Nature
             packedTeamBuilder.append(pk.nature).append("|");

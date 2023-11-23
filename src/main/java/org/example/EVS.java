@@ -11,6 +11,6 @@ public class EVS {
 
     public String getShowdownEvs()
     {
-        return "252,0,0,252,4,0";
+        return "252,,,252,4,+";
     }
 }

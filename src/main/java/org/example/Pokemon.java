@@ -1,6 +1,9 @@
 package org.example;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 
 public class Pokemon {
@@ -8,8 +11,9 @@ public class Pokemon {
     String showdownId;
     String uuid;
     String name;
-
-    public Pokemon(String level, String showdownId, String uuid, String name, String species, String gender, String item, EVS evs, String nature, IVS ivs, String[] moves, String ability) {
+    String status;
+int health;
+    public Pokemon(String level, String showdownId, String uuid, String name, String species, String gender, String item, EVS evs, String nature, IVS ivs, Move[] moves, String ability,String status) {
         this.level = level;
         this.showdownId = showdownId;
         this.uuid = uuid;
@@ -22,6 +26,8 @@ public class Pokemon {
         this.ivs = ivs;
         this.moves = moves;
         this.ability = ability;
+        this.status = status;
+        health = 30;
     }
 
     String species;
@@ -30,8 +36,18 @@ public class Pokemon {
     EVS evs;
     String nature;
     IVS ivs;
-    String moves[] = new String[4];
+    Move moves[] = new Move[4];
     private String ability;
+
+    Map <String,String>movesPP = new HashMap<String,String>();
+
+    public void setMovesPP(HashMap<String,String> movesList)
+    {
+        for(Map.Entry<String,String> map: movesList.entrySet())
+        {
+            movesPP.put(map.getKey(),map.getValue());
+        }
+    }
 
 
     public String showdownId() {
@@ -47,11 +63,11 @@ public class Pokemon {
     }
 
     public int getCurrentHealth() {
-        return 30;
+        return health;
     }
 
     public String getStatus() {
-        return "";
+        return status;
     }
 
     public String getAbility() {
