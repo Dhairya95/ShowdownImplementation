@@ -258,10 +258,10 @@ class Implementation{
 
     @Export
     fun sendFromShowdown(battleId: String, message: String) {
-        println("IMPLEMENTATION MESSAGE :"+message);
-        println("IMPLEMENTATION MESSAGE ENDED");
+   //     println("IMPLEMENTATION MESSAGE :"+message);
+   //     println("IMPLEMENTATION MESSAGE ENDED");
       ShowdownService.updatePokemonHealth(battleId,message);
-        ShowdownService.updatePokemonPP(battleId,message);
+      ShowdownService.updatePokemonPP(battleId,message);
 
 
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ShowdownService {
-    static  ArrayList player1Team,player2Team;
+    static  ArrayList player1Team,player2Team,player3Team,player4Team,player5Team,player6Team;
     static ArrayList playerTeams = new ArrayList();
     ShowdownService()
     {
@@ -30,86 +30,128 @@ public class ShowdownService {
         implementation.openConnection();
 
         BattleRegistry br = new BattleRegistry();
+
         Pokemon pokemon1 = new Pokemon("5", "articuno", "articunoUUID1", "Articuno", "Articuno", "M", "", new EVS(), "modest", new IVS(), new Move[]{new Move("icebeam",10,10), new Move("hurricane",10,10),new Move("substitute",10,10),new Move("screech",10,10)}, "pressure", "");
 
         Pokemon pokemon2 = new Pokemon("5", "charmander", "charmanderUUID2", "charmander", "charmander", "M", "", new EVS(), "bashful", new IVS(),new Move[]{new Move("smokescreen",10,10), new Move("ember",10,10),new Move( "scratch",10,10), new Move("growl",10,10)}, "blaze", "");
 
-        Pokemon pokemon3 = new Pokemon("5", "ponyta", "ponytaUUID3", "ponyta", "ponyta", "F", "", new EVS(), "rash", new IVS(), new Move[]{new Move("flamecharge",10,10), new Move("ember",10,10), new Move("tailwhip",10,10), new Move("uturn",10,10)}, "flashfire", "psn");
+        Pokemon pokemon3 = new Pokemon("5", "ponyta", "ponytaUUID3", "ponyta", "ponyta", "F", "", new EVS(), "rash", new IVS(), new Move[]{new Move("flamecharge",10,10), new Move("ember",10,10), new Move("tailwhip",10,10), new Move("uturn",10,10)}, "flashfire", "");
 
-        Pokemon pokemon4 = new Pokemon("5", "ludicolo", "ludicoloUUID4", "ludicolo", "ludicolo", "M", "", new EVS(), "modest", new IVS(), new Move[]{new Move("surf",10,10), new Move("gigadrain",10,10), new Move("icebeam",10,10),new Move( "raindance",10,10)}, "swiftswim", "");
+        Pokemon pokemon4 = new Pokemon("5", "ludicolo", "ludicoloUUID4", "ludicolo", "ludicolo", "M", "", new EVS(), "modest", new IVS(), new Move[]{new Move("icebeam",10,10), new Move("gigadrain",10,10), new Move("surf",10,10),new Move( "raindance",10,10)}, "swiftswim", "");
+
+        Pokemon pokemon5 = new Pokemon("5", "volbeat", "volbeatUUID5", "volbeat", "volbeat", "M", "", new EVS(), "bold", new IVS(), new Move[]{new Move("tailglow",10,10), new Move("batonpass",10,10), new Move("encore",10,10), new Move("raindance",10,10)}, "prankster", "");
+
+        Pokemon pokemon6 = new Pokemon("5", "seismitoad", "seismitoadUUID4", "seismitoad", "seismitoad", "F", "", new EVS(), "modest", new IVS(), new Move[]{new Move("hydropump",10,10), new Move("earthpower",10,10), new Move("stealthrock",10,10),new Move( "raindance",10,10)}, "swiftswim", "");
+
 
         player1Team = new ArrayList();
         player1Team.add(pokemon1);
-//        player1Team.add(pokemon2);
 
         player2Team = new ArrayList();
-        player2Team.add(pokemon3);
- //       player2Team.add(pokemon4);
+        player2Team.add(pokemon2);
+
+        player3Team = new ArrayList();
+        player3Team.add(pokemon3);
+
+        player4Team = new ArrayList();
+        player4Team.add(pokemon4);
+
+//        player5Team = new ArrayList();
+//        player5Team.add(pokemon5);
+
+//        player6Team = new ArrayList();
+//        player6Team.add(pokemon6);
 
         playerTeams.addAll(player1Team);
         playerTeams.addAll(player2Team);
+        playerTeams.addAll(player3Team);
+        playerTeams.addAll(player4Team);
+ //       playerTeams.addAll(player5Team);
+  //      playerTeams.addAll(player6Team);
 
-        String firstBattle[] = new String[3];
-        firstBattle[0] = ">start { \"format\": {  \"gameType\": \"singles\",    \"gen\": 9} }";
+        String firstBattle[] = new String[7];
+        firstBattle[0] = ">start { \"format\": {  \"gameType\": \"multi\",    \"gen\": 9} }";
         firstBattle[1] = ">player p1 {\"name\":\"Alice\",\"team\":\"" + br.packTeam(player1Team) + "\"}";
         firstBattle[2] = ">player p2 {\"name\":\"Bob\",\"team\":\"" + br.packTeam(player2Team) + "\"}";
+        firstBattle[3] = ">player p3 {\"name\":\"Cassie\",\"team\":\""+ br.packTeam(player3Team)+"\"}";
+        firstBattle[4] = ">player p4 {\"name\":\"Dave\",\"team\":\""+ br.packTeam(player4Team)+"\"}";
+  /*      firstBattle[5] = ">player p5 {\"name\":\"Eric\",\"team\":\""+ br.packTeam(player5Team)+"\"}";
+        firstBattle[6] = ">player p6 {\"name\":\"Faye\",\"team\":\""+ br.packTeam(player6Team)+"\"}";
+        firstBattle[5] = ">player p7 {\"name\":\"Eric\",\"team\":\""+ br.packTeam(player5Team)+"\"}";
+        firstBattle[6] = ">player p8 {\"name\":\"Faye\",\"team\":\""+ br.packTeam(player6Team)+"\"}";
+*/
 
         implementation.startBattle(uuid, firstBattle);
 
-        String battle[] = new String[1];
-
-        displayPokemonHealth(player1Team);
-        displayPokemonHealth(player2Team);
-        displayPokemonPP(playerTeams);
+      String battle[] = new String[1];
 
         System.out.println("-------Turn 1 --------");
 
-        battle[0] = ">p1 move 2";
+        battle[0] = ">p1 move 1 +1";
+         implementation.send(uuid, battle);
+
+        battle[0] = ">p2 move 1 ";
         implementation.send(uuid, battle);
 
-        battle[0] = ">p2 move 2";
+        battle[0] = ">p3 move 1 +1";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p4 move 1 ";
         implementation.send(uuid, battle);
 
 
-        displayPokemonHealth(player1Team);
-        displayPokemonHealth(player2Team);
-        displayPokemonPP(playerTeams);
 
 
-        System.out.println("------- Turn 2 --------");
+     System.out.println("------- Turn 2 --------");
 
-        battle[0] = ">p1 move 4";
+        battle[0] = ">p1 move 1 +2";
         implementation.send(uuid, battle);
 
-        battle[0] = ">p2 move 2";
+        battle[0] = ">p2 move 1";
         implementation.send(uuid, battle);
 
-        displayPokemonHealth(player1Team);
-        displayPokemonHealth(player2Team);
-        displayPokemonPP(playerTeams);
+        battle[0] = ">p3 move 1 +2";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p4 move 1";
+        implementation.send(uuid, battle);
+
+
 
         System.out.println("------- Turn 3 --------");
-
-        battle[0] = ">p1 move 2";
-        implementation.send(uuid, battle);
-
-
-        battle[0] = ">p2 move 2";
-        implementation.send(uuid, battle);
-
-        displayPokemonHealth(player1Team);
-        displayPokemonHealth(player2Team);
-        displayPokemonPP(playerTeams);
-    /*    System.out.println("------- Turn 4 --------");
-
-        battle[0] = ">p1 move 2";
-        implementation.send(uuid, battle);
 
         battle[0] = ">p1 move 1";
         implementation.send(uuid, battle);
 
+        battle[0] = ">p2 move 1";
+        implementation.send(uuid, battle);
 
-        System.out.println("------- Turn 5 --------");
+        battle[0] = ">p3 move 1";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p4 move 1";
+        implementation.send(uuid, battle);
+
+
+
+      System.out.println("------- Turn 4 --------");
+
+        battle[0] = ">p1 move 1";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p2 move 1";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p3 move 1";
+        implementation.send(uuid, battle);
+
+        battle[0] = ">p4 move 1";
+        implementation.send(uuid, battle);
+
+
+
+
+   /*     System.out.println("------- Turn 5 --------");
 
         battle[0] = ">p1 move 2";
         implementation.send(uuid, battle);
@@ -246,7 +288,7 @@ public static void updatePokemonPP(String battleId,String message)
 
                         if(pp.getUuid().equals(pokemonID.replaceAll(" ","")))
                         {
-                           System.out.println("Pokemon  health = "+pokmeonHP );
+          //                 System.out.println("Pokemon  health = "+pokmeonHP );
                             pp.health = Integer.parseInt(pokmeonHP);
                             if(msg[i+4].equals("0 fnt"))
                             {
